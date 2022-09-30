@@ -15,6 +15,23 @@
   border-radius: 50%;
 }
 
+header {
+  display:flex;
+}
+
+#start {
+  margin-right: 5px;
+}
+
+#game {
+  width: 500px;
+  height: 500px;
+}
+
+.winningPieces {
+background-color: black;
+
+}
 /* .piece.p1 {
   background-color: red;
 }
