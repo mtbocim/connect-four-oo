@@ -4,11 +4,26 @@ class Game {
   constructor(width = 6, height = 7) {
     this.width = width;
     this.height = height;
-    this.currPlayer = 1; // active player: 1 or 2
-    this.board = []; // array of rows, each row is array of cells  (board[y][x])
-    this.makeBoard();
-    this.makeHtmlBoard();
+    
+    this.start = document.querySelector("#start");
+    this.start.addEventListener("click", ()=>{
+      this.currPlayer = 1; // active player: 1 or 2
+      this.board = []; // array of rows, each row is array of cells  (board[y][x])
+      this.makeBoard();
+      this.makeHtmlBoard();
+    });
+    
   }
+
+  // startGame(){
+  //   console.log(this);
+  //   // let newBoard = this.makeBoard.bind(this);
+  //   // newBoard();
+  //   // let newHtmlBoard = this.makeHtmlBoard.bind(this);
+  //   // newHtmlBoard();
+  //   () => this.makeBoard();
+  //   () => this.makeHtmlBoard();
+  // }
   /** Connect Four
    *
    * Player 1 and 2 alternate turns. On each turn, a piece is dropped down a
@@ -33,11 +48,14 @@ class Game {
 
   makeHtmlBoard() {
     const board = document.getElementById('board');
-
+    while (board.firstChild) {
+      board.removeChild(board.firstChild);
+    }
+  
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
-    top.addEventListener('click', () => this.handleClick());
+    top.addEventListener('click', () => {this.handleClick(event)});
 
     // *alternative method* //
     // let click = this.handleClick.bind(this)
@@ -97,7 +115,7 @@ class Game {
   /** handleClick: handle click of column top to play piece */
 
   handleClick(evt) {
-
+    console.log("event", evt, "this", this);
     // get x from ID of clicked cell
     const x = +evt.target.id;
 
