@@ -4,15 +4,17 @@ class Game {
   constructor(width = 6, height = 7) {
     this.width = width;
     this.height = height;
-    
+
     this.start = document.querySelector("#start");
     this.start.addEventListener("click", ()=>{
-      this.currPlayer = 1; // active player: 1 or 2
       this.board = []; // array of rows, each row is array of cells  (board[y][x])
+      this.playerOne = new Player(document.querySelector('#playerOne').value);
+      this.playerTwo = new Player(document.querySelector('#playerTwo').value);
+      this.currPlayer = this.playerOne; // active player: 1 or 2
       this.makeBoard();
       this.makeHtmlBoard();
     });
-    
+
   }
 
   // startGame(){
@@ -51,7 +53,7 @@ class Game {
     while (board.firstChild) {
       board.removeChild(board.firstChild);
     }
-  
+
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
@@ -99,7 +101,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = `${this.currPlayer.color}`;
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -115,7 +117,7 @@ class Game {
   /** handleClick: handle click of column top to play piece */
 
   handleClick(evt) {
-    console.log("event", evt, "this", this);
+    // console.log("event", evt, "this", this);
     // get x from ID of clicked cell
     const x = +evt.target.id;
 
@@ -140,7 +142,8 @@ class Game {
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === this.playerOne ?
+    this.playerTwo : this.playerOne;
   }
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -174,21 +177,12 @@ class Game {
       }
     }
   }
+}
 
-  // _win(cells) {
+class Player {
+constructor(color){
+  this.color = color;
+}
 
-  //   return cells.every(
-  //     ([y, x]) =>
-  //       y >= 0 &&
-  //       y < this.height &&
-  //       x >= 0 &&
-  //       x < this.width &&
-  //       this.board[y][x] === this.currPlayer
-  //   );
-  // }
-
-
-  // makeBoard();
-  // makeHtmlBoard();
 }
 let newGame = new Game(6, 7);
