@@ -1,9 +1,9 @@
 "use strict";
-
+// change width / height to lowercase
 class Game {
   constructor(width = 6, height = 7) {
-    this.WIDTH = width;
-    this.HEIGHT = height;
+    this.width = width;
+    this.height = height;
     this.currPlayer = 1; // active player: 1 or 2
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.makeBoard();
@@ -24,8 +24,8 @@ class Game {
    */
 
   makeBoard() {
-    for (let y = 0; y < this.HEIGHT; y++) {
-      this.board.push(Array.from({ length: this.WIDTH }));
+    for (let y = 0; y < this.height; y++) {
+      this.board.push(Array.from({ length: this.width }));
     }
   }
 
@@ -39,7 +39,7 @@ class Game {
     top.setAttribute('id', 'column-top');
     top.addEventListener('click', () => this.handleClick(event));
 
-    for (let x = 0; x < this.WIDTH; x++) {
+    for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement('td');
       headCell.setAttribute('id', x);
       top.append(headCell);
@@ -48,10 +48,10 @@ class Game {
     board.append(top);
 
     // make main part of board
-    for (let y = 0; y < this.HEIGHT; y++) {
+    for (let y = 0; y < this.height; y++) {
       const row = document.createElement('tr');
 
-      for (let x = 0; x < this.WIDTH; x++) {
+      for (let x = 0; x < this.width; x++) {
         const cell = document.createElement('td');
         cell.setAttribute('id', `${y}-${x}`);
         row.append(cell);
@@ -64,7 +64,7 @@ class Game {
   /** findSpotForCol: given column x, return top empty y (null if filled) */
 
   findSpotForCol(x) {
-    for (let y = this.HEIGHT - 1; y >= 0; y--) {
+    for (let y = this.height - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
         return y;
       }
@@ -109,12 +109,12 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
-      return endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`Player ${this.currPlayer} won!`);
     }
 
     // check for tie
     if (this.board.every(row => row.every(cell => cell))) {
-      return endGame('Tie!');
+      return this.endGame('Tie!');
     }
 
     // switch players
@@ -122,10 +122,21 @@ class Game {
   }
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
-
   checkForWin() {
-    for (let y = 0; y < this.HEIGHT; y++) {
-      for (let x = 0; x < this.WIDTH; x++) {
+
+    const _win = (cells) => {
+      return cells.every(
+        ([y, x]) =>
+          y >= 0 &&
+          y < this.height &&
+          x >= 0 &&
+          x < this.width &&
+          this.board[y][x] === this.currPlayer
+      );
+    }
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
 
         // get "check list" of 4 cells (starting here) for each of the different
         // ways to win
@@ -135,24 +146,24 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (this._win(horiz) || this._win(vert) || this._win(diagDR) || this._win(diagDL)) {
+        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
           return true;
         }
       }
     }
   }
 
-  _win(cells) {
+  // _win(cells) {
 
-    return cells.every(
-      ([y, x]) =>
-        y >= 0 &&
-        y < this.HEIGHT &&
-        x >= 0 &&
-        x < this.WIDTH &&
-        this.board[y][x] === this.currPlayer
-    );
-  }
+  //   return cells.every(
+  //     ([y, x]) =>
+  //       y >= 0 &&
+  //       y < this.height &&
+  //       x >= 0 &&
+  //       x < this.width &&
+  //       this.board[y][x] === this.currPlayer
+  //   );
+  // }
 
 
   // makeBoard();
